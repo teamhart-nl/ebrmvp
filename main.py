@@ -86,6 +86,7 @@ class GUI:
         self.btn_random_pattern.configure(state="active")
         self.btn_correct.configure(state="disabled")
         self.btn_incorrect.configure(state="disabled")
+        self.btn_show_card.configure(state="disabled")
 
     def incorrectClicked(self):
         print("t was incorrect")
@@ -101,6 +102,7 @@ class GUI:
         self.btn_random_pattern.configure(state="active")
         self.btn_correct.configure(state="disabled")
         self.btn_incorrect.configure(state="disabled")
+        self.btn_show_card.configure(state="disabled")
 
     def _sendCurrentFlashCard(self):
         print("sending following entry to database")
