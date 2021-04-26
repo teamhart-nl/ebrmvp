@@ -1,4 +1,7 @@
 from tkinter import *
+import uuid
+import pickle
+import os
 
 from Database import Database
 from FlashCardEntry import FlashCardEntry
@@ -9,6 +12,12 @@ class GUI:
     def __init__(self):
         # initialize database
         self.database = Database()
+
+        # set session id 
+        self.session_id = "session-"+str(uuid.uuid4())
+
+        # get persisent user id
+        self.user_id = self._getUserID()
 
         #interface for getting patterns
         self.pattern_store = PatternStore()
@@ -43,11 +52,11 @@ class GUI:
 
     def newPatternClicked(self):
         # get a random pattern from PatternStore
-        pattern = self.pattern_store.getRandomPattern()
-        self.current_pattern = pattern
-        self.current_flashcard = FlashCardEntry(pattern)
-
+        self.current_pattern = self.pattern_store.getRandomPattern()
         # initialize current flashcard entry
+        self.current_flashcard = FlashCardEntry(patternID=self.current_pattern, 
+                                                userID = self.user_id, 
+                                                sessionID = self.session_id)
 
         self.btn_show_card.configure(state="active")
         self.btn_random_pattern.configure(state="disabled")
@@ -99,6 +108,19 @@ class GUI:
 
         self.database.addEntry(self.current_flashcard)
 
+    '''
+    Checks if first local run; if so makes userid else read its in
+    '''
+    def _getUserID(self):
+        if "user.id" in os.listdir(os.getcwd()):
+            with open("user.id", 'rb') as f:
+                return str(pickle.load(f))
+        else:
+            userid = "user-"+str(uuid.uuid4())
+            with open("user.id", 'wb')  as f:
+                pickle.dump(userid, f)
+            return userid
+    
 
 if __name__ == "__main__":
     gui = GUI()

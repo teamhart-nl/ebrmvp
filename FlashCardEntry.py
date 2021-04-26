@@ -1,4 +1,3 @@
-from random import randint
 from datetime import datetime
 import uuid
 
@@ -6,19 +5,21 @@ class FlashCardEntry:
 
     def __init__(self,
                  patternID,
-                 userID = "user-"+str(uuid.uuid4()),
-                 sessionID = "session-"+str(uuid.uuid4()),
-                 entryID = "entry-"+str(uuid.uuid4()),
-                 date=datetime.now(),
-                 result = -1,
-                 responseTime = -1):
+                 userID,
+                 sessionID):
 
-        self.start_time = date
+        #  set generated values
+        entryID = "entry-"+str(uuid.uuid4())
+        self.start_time = datetime.now()
 
+        # set placeholders
+        responseTime = -1
+        result = -1
+        
         self.userID = userID
         self.sessionID = sessionID
         self.entryID = entryID
-        self.date = date.strftime("%d/%m/%Y %H:%M:%S")
+        self.date = self.start_time.strftime("%d/%m/%Y %H:%M:%S")
         self.patternID = patternID
         self.result = result
         self.responseTime = responseTime
