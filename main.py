@@ -7,13 +7,8 @@ from PatternStore import PatternStore
 class GUI:
 
     def __init__(self):
-        # creating an entry
-        #fcEntry = FlashCardEntry()
-        #fcEntry.printEntry()
-
-        # adding it to the database
+        # initialize database
         #self.database = Database()
-        #self.database.addEntry(fcEntry)
 
         #interface for getting patterns
         self.pattern_store = PatternStore()
@@ -50,6 +45,7 @@ class GUI:
         # get a random pattern from PatternStore
         pattern = self.pattern_store.getRandomPattern()
         self.current_pattern = pattern
+        self.current_flashcard = FlashCardEntry(pattern)
 
         # initialize current flashcard entry
 
@@ -57,16 +53,27 @@ class GUI:
         self.btn_random_pattern.configure(state="disabled")
 
     def showCardClicked(self):
+        #set the response time of entry
+        self.current_flashcard.setDoneTime()
+
+        # display the pattern that was sent
         self.lbl.configure(text=self.current_pattern)
 
+        # update GUI to verification state
         self.btn_correct.configure(state="active")
         self.btn_incorrect.configure(state="active")
 
     def correctClicked(self):
         print("t was correct")
 
-        self.lbl.configure(text="hidden")
+        # finish current flashcard
+        self.current_flashcard.addResult(correct = True)
 
+        # send flashcard to database
+        self._sendCurrentFlashCard()
+
+        # update GUI to starting state
+        self.lbl.configure(text="hidden")
         self.btn_random_pattern.configure(state="active")
         self.btn_correct.configure(state="disabled")
         self.btn_incorrect.configure(state="disabled")
@@ -74,11 +81,24 @@ class GUI:
     def incorrectClicked(self):
         print("t was incorrect")
 
-        self.lbl.configure(text="hidden")
+        # finish current flashcard
+        self.current_flashcard.addResult(correct = False)
 
+        # send flashcard to database
+        self._sendCurrentFlashCard()
+
+        # update GUI to starting state
+        self.lbl.configure(text="hidden")
         self.btn_random_pattern.configure(state="active")
         self.btn_correct.configure(state="disabled")
         self.btn_incorrect.configure(state="disabled")
+
+    def _sendCurrentFlashCard(self):
+        print("sending following entry to database")
+        self.current_flashcard.printEntry()
+
+        #self.database.addEntry(fcEntry)
+
 
 if __name__ == "__main__":
     gui = GUI()
