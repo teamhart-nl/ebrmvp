@@ -1,6 +1,6 @@
 from tkinter import *
 
-#from Database import Database
+from Database import Database
 from FlashCardEntry import FlashCardEntry
 from PatternStore import PatternStore
 
@@ -8,7 +8,7 @@ class GUI:
 
     def __init__(self):
         # initialize database
-        #self.database = Database()
+        self.database = Database()
 
         #interface for getting patterns
         self.pattern_store = PatternStore()
@@ -97,7 +97,7 @@ class GUI:
         print("sending following entry to database")
         self.current_flashcard.printEntry()
 
-        #self.database.addEntry(fcEntry)
+        self.database.addEntry(self.current_flashcard)
 
 
 if __name__ == "__main__":
